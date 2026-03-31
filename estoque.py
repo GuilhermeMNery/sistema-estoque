@@ -1,5 +1,6 @@
 from Modelos.produtos import Produtos
 from datetime import datetime
+import json
 import os
 
 Estoque = [
@@ -25,11 +26,11 @@ def mostrar_menu(): #Mostra o menu de opções
     )
         escolher_funcionalidade()
 
-def limpar_terminal(): #Limpa o terminal.
+def limpar_terminal(): # Limpa o terminal.
     input("Pressione qualquer tecla para recomeçar")
     os.system("cls")
 
-def escolher_funcionalidade(): # Permite o usuário escolher qual finalidade deseja acessar.
+def escolher_funcionalidade(): # Permite o usuário escolher qual funcionalidade deseja acessar.
     try:
         finalidade = int(input("Qual função deseja executar?  "))
         match finalidade:
@@ -56,7 +57,9 @@ def escolher_funcionalidade(): # Permite o usuário escolher qual finalidade des
         'x'
         limpar_terminal()
         return
-    
+def salvar_dados():
+    if os.path.exists("dados.json"):
+        'x'
 def adicionar_historico(registro_recebido):
     registro = datetime.now()
     registro_formatado = f'{registro_recebido} às {registro.strftime("%H:%M")} do dia {registro.strftime("%d/%m/%Y")}'
