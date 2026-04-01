@@ -18,4 +18,7 @@ class Produtos:
     def nome(self):
         return self._nome
     
+    def to_dict(self):
+        return {"Nome": self.nome, "Quantidade": self.quantidade, "Preço_compra": self._preço_de_compra, "Preço_venda": self._preço_de_venda}
+    
     

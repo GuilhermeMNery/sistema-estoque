@@ -3,11 +3,7 @@ from datetime import datetime
 import json
 import os
 
-Estoque = [
-        Produtos("Teclado", 1, 100, 140),
-        Produtos("Mouse", 1, 50, 90),
-        Produtos("Mousepad", 1, 100, 125)
-]
+
 
 Histórico = []
 
@@ -57,9 +53,17 @@ def escolher_funcionalidade(): # Permite o usuário escolher qual funcionalidade
         'x'
         limpar_terminal()
         return
+
 def salvar_dados():
     if os.path.exists("dados.json"):
-        'x'
+        with open("dados.json", "w", encoding= 'utf-8') as arquivo:
+            json.dump([v.to_dict() for v in Estoque], arquivo, indent=4, ensure_ascii=False)
+
+def definir_lista():
+    if os.path.exists('dados.json'):
+        with open("dados.json", "r", encoding= 'utf-8') as arquivo:
+             return json.load(arquivo)
+
 def adicionar_historico(registro_recebido):
     registro = datetime.now()
     registro_formatado = f'{registro_recebido} às {registro.strftime("%H:%M")} do dia {registro.strftime("%d/%m/%Y")}'
@@ -84,7 +88,7 @@ def listar_produtos(): # Lista os produtos no estoque
     if verificar_se_ha_produtos():
         for produto in Estoque:
             print(produto)
-        return
+            return
     else:
         print("Não há produtos cadastrados, cadastre e tente novamente!")
         limpar_terminal()
@@ -123,6 +127,7 @@ def cadastrar_produto(): # Permite que o usuário cadastre produtos
             else:
                 Estoque.append(Produtos(nome_novo_produto.strip().title(), quantidade_novo_produto, preçodecompra_novo_produto, preçodevenda_novo_produto))
                 print("Seu Produto foi cadastrado!")
+                salvar_dados()
                 limpar_terminal()
                 return
         except ValueError:
@@ -141,6 +146,7 @@ def excluir_produto(): # Permite que o usuário exclua um produto cadastrado
         if produto_excluido != None:
             Estoque.remove(produto_excluido)
             print("Seu produto foi excluído!")
+            salvar_dados()
             limpar_terminal()
             return
         else:
@@ -163,6 +169,7 @@ def entrada_estoque():
                 if quantidade_adicionada > 0:
                   produto_adicao_estoque.quantidade += quantidade_adicionada
                   print(f"A quantia foi adicionada, agora há {produto_adicao_estoque.quantidade} unidades de {produto_adicao_estoque.nome}!")
+                  salvar_dados()
                   registro_entrada = f'+ {quantidade_adicionada} unidades de {produto_adicao_estoque.nome}'
                   adicionar_historico(registro_entrada)
                   limpar_terminal()
@@ -195,6 +202,7 @@ def saida_estoque():
                 if quantidade_retirada > 0 and produto_subtracao_estoque.quantidade >= quantidade_retirada:
                   produto_subtracao_estoque.quantidade -= quantidade_retirada
                   print(f"A quantia foi retirada, agora há {produto_subtracao_estoque.quantidade} unidades de {produto_subtracao_estoque.nome}!")
+                  salvar_dados()
                   registro_saida = f'- {quantidade_retirada} unidades de {produto_subtracao_estoque.nome}'
                   adicionar_historico(registro_saida)
                   limpar_terminal()
@@ -244,6 +252,7 @@ def editar_produto():
                     produto_editado.quantidade = nova_quantidade
                     produto_editado._preço_de_compra = novo_preço_compra
                     produto_editado._preço_de_venda = novo_preço_venda
+                    salvar_dados()
                     print("Seu produto foi editado!")
                     limpar_terminal()
                     return
@@ -266,6 +275,7 @@ def editar_produto():
 
 if __name__ == '__main__':
     while True:
+        Estoque = [definir_lista()]
         mostrar_menu()
 
 

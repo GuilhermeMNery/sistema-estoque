@@ -1,0 +1,20 @@
+[
+    {
+        "Nome": "Teclado",
+        "Quantidade": 1,
+        "Preço_compra": 100,
+        "Preço_venda": 140
+    },
+    {
+        "Nome": "Mouse",
+        "Quantidade": 1,
+        "Preço_compra": 50,
+        "Preço_venda": 90
+    },
+    {
+        "Nome": "Mousepad",
+        "Quantidade": 1,
+        "Preço_compra": 100,
+        "Preço_venda": 125
+    }
+]
