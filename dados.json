@@ -1,7 +1,7 @@
 [
     {
         "Nome": "Teclado",
-        "Quantidade": 1,
+        "Quantidade": 7,
         "Preço_compra": 100,
         "Preço_venda": 140
     },
@@ -13,13 +13,13 @@
     },
     {
         "Nome": "Mousepad",
-        "Quantidade": 11,
+        "Quantidade": 2,
         "Preço_compra": 100,
         "Preço_venda": 125
     },
     {
         "Nome": "Headset Logitech",
-        "Quantidade": 5,
+        "Quantidade": 2,
         "Preço_compra": 90.0,
         "Preço_venda": 150.0
     }

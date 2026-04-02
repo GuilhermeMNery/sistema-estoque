@@ -278,8 +278,10 @@ if __name__ == '__main__':
         if os.path.exists('historico.json'):
             with open("historico.json", "r", encoding="utf-8" ) as arquivo2:
                 registro = json.load(arquivo2)
+
+    Histórico = [r for r in registro]
     Estoque = [Produtos(d["Nome"], d["Quantidade"], d["Preço_compra"], d["Preço_venda"]) for d in dados]
-    Histórico = [registro]
+    
     while True:
         mostrar_menu()
 
