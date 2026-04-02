@@ -12,7 +12,7 @@ class Produtos:
     def calcular_margemde_lucro(self):
         lucro = self._preço_de_venda - self._preço_de_compra
         margem_de_lucro = lucro / self._preço_de_compra * 100
-        return f"O lucro por venda é de {lucro} tendo uma margem de {round(margem_de_lucro, 2)}%"
+        return f"O lucro por venda é de R${lucro} tendo uma margem de {round(margem_de_lucro, 2)}%"
 
     @property
     def nome(self):

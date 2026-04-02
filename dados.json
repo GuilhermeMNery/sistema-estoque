@@ -7,14 +7,20 @@
     },
     {
         "Nome": "Mouse",
-        "Quantidade": 1,
+        "Quantidade": 7,
         "Preço_compra": 50,
         "Preço_venda": 90
     },
     {
         "Nome": "Mousepad",
-        "Quantidade": 1,
+        "Quantidade": 11,
         "Preço_compra": 100,
         "Preço_venda": 125
+    },
+    {
+        "Nome": "Headset Logitech",
+        "Quantidade": 5,
+        "Preço_compra": 90.0,
+        "Preço_venda": 150.0
     }
 ]

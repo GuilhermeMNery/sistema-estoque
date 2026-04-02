@@ -59,15 +59,13 @@ def salvar_dados():
         with open("dados.json", "w", encoding= 'utf-8') as arquivo:
             json.dump([v.to_dict() for v in Estoque], arquivo, indent=4, ensure_ascii=False)
 
-def definir_lista():
-    if os.path.exists('dados.json'):
-        with open("dados.json", "r", encoding= 'utf-8') as arquivo:
-             return json.load(arquivo)
-
 def adicionar_historico(registro_recebido):
     registro = datetime.now()
     registro_formatado = f'{registro_recebido} às {registro.strftime("%H:%M")} do dia {registro.strftime("%d/%m/%Y")}'
     Histórico.append(registro_formatado)
+    if os.path.exists('historico.json'):
+        with open('historico.json', 'w', encoding='utf-8') as arquivo:
+            json.dump([h for h in Histórico], arquivo, indent=4, ensure_ascii=False)
 
 def mostrar_historico():
     if len(Histórico) > 0:
@@ -88,7 +86,7 @@ def listar_produtos(): # Lista os produtos no estoque
     if verificar_se_ha_produtos():
         for produto in Estoque:
             print(produto)
-            return
+        return
     else:
         print("Não há produtos cadastrados, cadastre e tente novamente!")
         limpar_terminal()
@@ -274,8 +272,15 @@ def editar_produto():
 #------------------CÓDIGO DE FUNCIONAMENTO:
 
 if __name__ == '__main__':
+    if os.path.exists("dados.json"):
+        with open("dados.json", "r", encoding="utf-8" ) as arquivo:
+                dados = json.load(arquivo)
+        if os.path.exists('historico.json'):
+            with open("historico.json", "r", encoding="utf-8" ) as arquivo2:
+                registro = json.load(arquivo2)
+    Estoque = [Produtos(d["Nome"], d["Quantidade"], d["Preço_compra"], d["Preço_venda"]) for d in dados]
+    Histórico = [registro]
     while True:
-        Estoque = [definir_lista()]
         mostrar_menu()
 
 
