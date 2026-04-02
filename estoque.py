@@ -3,10 +3,6 @@ from datetime import datetime
 import json
 import os
 
-
-
-Histórico = []
-
 #------------------FUNÇÕES:
 
 def mostrar_menu(): #Mostra o menu de opções
@@ -18,13 +14,14 @@ def mostrar_menu(): #Mostra o menu de opções
         "4-Entrada de estoque\n"
         "5-Saída de estoque\n"
         "6-Editar Produto\n"
-        "7-Histórico de entrada/saída de estoque"
+        "7-Histórico de entrada/saída de estoque\n"
+        "8-Sair"
     )
         escolher_funcionalidade()
 
 def limpar_terminal(): # Limpa o terminal.
     input("Pressione qualquer tecla para recomeçar")
-    os.system("cls")
+    os.system("cls" if os.name == 'nt' else "clear")
 
 def escolher_funcionalidade(): # Permite o usuário escolher qual funcionalidade deseja acessar.
     try:
@@ -44,40 +41,28 @@ def escolher_funcionalidade(): # Permite o usuário escolher qual funcionalidade
             case 6:
                 editar_produto()
             case 7:
-                mostrar_historico()
+                escolha_filtrohistorico()
+            case 8:
+                exit()
             case _:
-                'x'
+                print('❌ Número inválido, tente novamente!')
                 limpar_terminal()
                 return
     except ValueError:
-        'x'
+        print("❌ Só aceitamos números, tente novamente")
         limpar_terminal()
         return
 
-def salvar_dados():
-    if os.path.exists("dados.json"):
-        with open("dados.json", "w", encoding= 'utf-8') as arquivo:
-            json.dump([v.to_dict() for v in Estoque], arquivo, indent=4, ensure_ascii=False)
+def salvar_dados(): #Salva as mudanças no estoque no arquivo json
+    with open("dados.json", "w", encoding= 'utf-8') as arquivo:
+        json.dump([v.to_dict() for v in Estoque], arquivo, indent=4, ensure_ascii=False)
 
-def adicionar_historico(registro_recebido):
+def adicionar_historico(registro_recebido):#Adiciona as modificações ao arquivo json
     registro = datetime.now()
     registro_formatado = f'{registro_recebido} às {registro.strftime("%H:%M")} do dia {registro.strftime("%d/%m/%Y")}'
     Histórico.append(registro_formatado)
-    if os.path.exists('historico.json'):
-        with open('historico.json', 'w', encoding='utf-8') as arquivo:
-            json.dump([h for h in Histórico], arquivo, indent=4, ensure_ascii=False)
-
-def mostrar_historico():
-    if len(Histórico) > 0:
-        for registro in Histórico:
-            print(registro)
-        limpar_terminal()
-        return
-    else:
-        print("Ainda não há histórico de mudanças de estoque")
-        limpar_terminal()
-        return
-
+    with open('historico.json', 'w', encoding='utf-8') as arquivo:
+         json.dump([h for h in Histórico], arquivo, indent=4, ensure_ascii=False)
 
 def verificar_se_ha_produtos(): # Verifica se a lista não está vazia.
     return len(Estoque) > 0
@@ -92,24 +77,16 @@ def listar_produtos(): # Lista os produtos no estoque
         limpar_terminal()
         return
 
-def procurar_produto_nalista(produtoembusca):
-    produto_existe = None
+def procurar_produto_nalista(produtoembusca):#Procura o produto que o usuário enviou na lista
     for produto in Estoque:
         if produtoembusca.lower().strip() == produto.nome.lower():
-            produto_existe = True
-            produto_encontrado = produto
-            break
-        else:
-            continue
-    if produto_existe:
-        return produto_encontrado
-    else:
-        return produto_existe
+            return produto
+    return None
     
 def cadastrar_produto(): # Permite que o usuário cadastre produtos
     nome_novo_produto = input("Qual nome do produto?  ")
     verificacao_se_existe = procurar_produto_nalista(nome_novo_produto)
-    if verificacao_se_existe == None:
+    if verificacao_se_existe is None:
         try:
             quantidade_novo_produto = int(input("Quantos há desse produto em estoque?  "))
             preçodecompra_novo_produto = float(input("Por quanto você comprou essse produto?  "))
@@ -129,7 +106,7 @@ def cadastrar_produto(): # Permite que o usuário cadastre produtos
                 limpar_terminal()
                 return
         except ValueError:
-            'x'
+            print("❌ Só aceitamos números, tente novamente")
             return
     else:
         print("Esse produto já está cadastrado, tente novamente.")
@@ -141,7 +118,7 @@ def excluir_produto(): # Permite que o usuário exclua um produto cadastrado
         listar_produtos()
         produto_futuramente_excluido = input("Qual o nome do produto?  ")
         produto_excluido = procurar_produto_nalista(produto_futuramente_excluido)
-        if produto_excluido != None:
+        if produto_excluido is not None:
             Estoque.remove(produto_excluido)
             print("Seu produto foi excluído!")
             salvar_dados()
@@ -156,12 +133,12 @@ def excluir_produto(): # Permite que o usuário exclua um produto cadastrado
         limpar_terminal()
         return
 
-def entrada_estoque():
+def entrada_estoque():#Permite aumentar a quantidade de um produto
     if verificar_se_ha_produtos():
         listar_produtos()
         produto_futuramente_adicao_estoque = input("Qual produto você quer adicionar quantidade?  ")
         produto_adicao_estoque = procurar_produto_nalista(produto_futuramente_adicao_estoque)
-        if produto_adicao_estoque != None:
+        if produto_adicao_estoque is not None:
             try:
                 quantidade_adicionada = int(input(f"Quanto foi comprado de {produto_adicao_estoque.nome}?  "))
                 if quantidade_adicionada > 0:
@@ -177,7 +154,7 @@ def entrada_estoque():
                     limpar_terminal()
                     return
             except ValueError:
-               'x'
+               print("❌ Só aceitamos números, tente novamente")
                limpar_terminal()
                return
         else:
@@ -189,12 +166,12 @@ def entrada_estoque():
         limpar_terminal()
         return
     
-def saida_estoque():
+def saida_estoque():#Permite diminuir a quantidade de um produto
     if verificar_se_ha_produtos():
         listar_produtos()
         produto_futuramente_subtracao_estoque = input("Qual produto você quer retirar quantidade?  ")
         produto_subtracao_estoque = procurar_produto_nalista(produto_futuramente_subtracao_estoque)
-        if produto_subtracao_estoque != None:
+        if produto_subtracao_estoque is not None:
             try:
                 quantidade_retirada = int(input(f"Quanto foi vendido de {produto_subtracao_estoque.nome}?  "))
                 if quantidade_retirada > 0 and produto_subtracao_estoque.quantidade >= quantidade_retirada:
@@ -210,7 +187,7 @@ def saida_estoque():
                     limpar_terminal()
                     return
             except ValueError:
-               'x'
+               print("❌ Só aceitamos números, tente novamente")
                limpar_terminal()
                return
         else:
@@ -222,12 +199,12 @@ def saida_estoque():
         limpar_terminal()
         return
 
-def editar_produto():
+def editar_produto():#Permite editar informações de um produto
     if verificar_se_ha_produtos():
         listar_produtos()
         produto_futuramente_editado = input("Qual Produto deseja editar?  ")
         produto_editado = procurar_produto_nalista(produto_futuramente_editado)
-        if produto_editado != None:
+        if produto_editado is not None:
             novo_nome = input("Qual nome deseja colocar nesse produto?  ").title().strip()
             try:
                 nova_quantidade = int(input("Qual a quantidade desse produto?  "))
@@ -246,16 +223,13 @@ def editar_produto():
                     limpar_terminal()
                     return
                 else:
-                    produto_editado._nome = novo_nome
-                    produto_editado.quantidade = nova_quantidade
-                    produto_editado._preço_de_compra = novo_preço_compra
-                    produto_editado._preço_de_venda = novo_preço_venda
+                    produto_editado.editar(novo_nome, nova_quantidade, novo_preço_compra, novo_preço_venda)
                     salvar_dados()
                     print("Seu produto foi editado!")
                     limpar_terminal()
                     return
             except ValueError:
-                'x'
+                print("❌ Só aceitamos números, tente novamente")
                 limpar_terminal()
                 return
         else:
@@ -267,21 +241,78 @@ def editar_produto():
         limpar_terminal()
         return
 
+def escolha_filtrohistorico():#Escolhe o estilo do filtro
+    print("Escolha o modo de filtro!\n" "1-Todo histórico\n" "2-Histórico de um produto")
+    try:
+        escolha = int(input("Qual opção deseja?  "))
+        match escolha:
+            case 1:
+                if len(Histórico) > 0:
+                    for registro in Histórico:
+                        print(registro)
+                    limpar_terminal()
+                    return
+                else:
+                    print("Ainda não há histórico de mudanças de estoque")
+                    limpar_terminal()
+                    return
+            case 2:
+                procurar_historico_produto()
+                limpar_terminal()
+                return
+            case _:
+                print('❌ Sinal inválido, tente novamente!')
+                limpar_terminal()
+                return
+    except ValueError:
+        print("❌ Só aceitamos números, tente novamente")
+        limpar_terminal()
+        return
+    
+def mostrar_historico(produto, operação): #Mostra o estoque do produto e operação escolhida por usuário
+    if len(Histórico) > 0:
+        verificacao = None
+        for registro in Histórico:
+            if produto in  registro and (operação in registro or operação == '/'):
+                print(registro)
+                verificacao = True
+        print("Não há registro desse produto com essa operação") if verificacao is None else ''
+        limpar_terminal()
+        return
+    else:
+        print("Ainda não há histórico de mudanças de estoque")
+        limpar_terminal()
+        return
+
+def procurar_historico_produto(): #Procura o histórico do produto
+    produto_busca = input("Qual Produto você deseja ver histórico?  ")
+    produto = produto_busca.title()
+    operacao = input("Digite + para entrada, - para saída ou / para os dois.  ").strip()
+    match operacao:
+        case '+' | '-' | '/' :
+            mostrar_historico(produto, operacao)
+        case _:
+            print("❌ Só aceitamos os sinais, tente novamente")
+            limpar_terminal()
+            return
+
+
 
 
 #------------------CÓDIGO DE FUNCIONAMENTO:
 
 if __name__ == '__main__':
+    dados = [ ]
+    registro = [ ]
     if os.path.exists("dados.json"):
         with open("dados.json", "r", encoding="utf-8" ) as arquivo:
                 dados = json.load(arquivo)
-        if os.path.exists('historico.json'):
-            with open("historico.json", "r", encoding="utf-8" ) as arquivo2:
-                registro = json.load(arquivo2)
+    if os.path.exists('historico.json'):
+        with open("historico.json", "r", encoding="utf-8" ) as arquivo2:
+            registro = json.load(arquivo2)
 
     Histórico = [r for r in registro]
     Estoque = [Produtos(d["Nome"], d["Quantidade"], d["Preço_compra"], d["Preço_venda"]) for d in dados]
-    
     while True:
         mostrar_menu()
 

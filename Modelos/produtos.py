@@ -12,7 +12,7 @@ class Produtos:
     def calcular_margemde_lucro(self):
         lucro = self._preço_de_venda - self._preço_de_compra
         margem_de_lucro = lucro / self._preço_de_compra * 100
-        return f"O lucro por venda é de R${lucro} tendo uma margem de {round(margem_de_lucro, 2)}%"
+        return f"O lucro por venda é de R${round(lucro, 2)} tendo uma margem de {round(margem_de_lucro, 2)}%"
 
     @property
     def nome(self):
@@ -21,4 +21,9 @@ class Produtos:
     def to_dict(self):
         return {"Nome": self.nome, "Quantidade": self.quantidade, "Preço_compra": self._preço_de_compra, "Preço_venda": self._preço_de_venda}
     
+    def editar(self, nome, quantidade, preço_compra, preço_venda):
+        self._nome = nome
+        self.quantidade = quantidade
+        self._preço_de_compra = preço_compra
+        self._preço_de_venda = preço_venda
     
