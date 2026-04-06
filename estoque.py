@@ -166,7 +166,7 @@ def entrada_estoque():#Permite aumentar a quantidade de um produto
         limpar_terminal()
         return
     
-def saida_estoque():#Permite diminuir a quantidade de um produto
+def saida_estoque():# Permite diminuir a quantidade de um produto
     if verificar_se_ha_produtos():
         listar_produtos()
         produto_futuramente_subtracao_estoque = input("Qual produto você quer retirar quantidade?  ")
