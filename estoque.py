@@ -1,4 +1,4 @@
-from Modelos.produtos import Produtos
+
 from Interface.menu import mostrar_menu
 from Servicos.arquivo_service import carregar_dados
 

@@ -33,7 +33,7 @@ def escolher_funcionalidade(Estoque, Histórico): # Permite o usuário escolher 
                 listar_produtos(Estoque)
                 valores = obter_entrada_estoque(Estoque)
                 if valores is not None:
-                    entrada_estoque(Estoque, valores)
+                    entrada_estoque(Estoque, valores[0], valores[1])
                     registro_entrada = f'+ {valores[1]} unidades de {valores[0].nome}'
                     adicionar_historico(Histórico, registro_entrada)
 
@@ -41,13 +41,13 @@ def escolher_funcionalidade(Estoque, Histórico): # Permite o usuário escolher 
                 listar_produtos(Estoque)
                 valores = obter_saida_estoque(Estoque)
                 if valores is not None:
-                    saida_estoque(Estoque, valores)
+                    saida_estoque(Estoque, valores[0], valores[1])
                     registro_saida = f'- {valores[1]} unidades de {valores[0].nome}'
                     adicionar_historico(Histórico, registro_saida)
 
             case 6:
                 produto = obter_produto_editado(Estoque)
-                editar_produto(Estoque, produto) if produto is not None else ''
+                editar_produto(Estoque, produto[0], produto[1], produto[2], produto[3], produto[4]) if produto is not None else ''
             case 7:
                 escolha_filtrohistorico(Histórico)
             case 8:

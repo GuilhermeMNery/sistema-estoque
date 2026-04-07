@@ -28,8 +28,5 @@ def saida_estoque(Estoque, produto, quantidade):
     salvar_dados(Estoque)
 
 def editar_produto(Estoque, produto, nome, quantidade, preço_compra, preço_venda):
-    produto.nome = nome
-    produto.quantidade = quantidade
-    produto._preço_de_compra = preço_compra
-    produto._preço_de_venda = preço_venda
+    produto.editar(nome, quantidade, preço_compra, preço_venda)
     salvar_dados(Estoque)
